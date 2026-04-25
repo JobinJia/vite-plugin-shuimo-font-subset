@@ -1,0 +1,55 @@
+{
+  "name": "@jobinjia/vite-plugin-shuimo-font-subset",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Content-aware font subset Vite plugin — scans source files for unique characters and replaces font assets with subsetted WOFF2 at build time.",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "vite": "^5.0.0 || ^6.0.0 || ^7.0.0"
+  },
+  "dependencies": {
+    "globby": "^14.0.0",
+    "subset-font": "^2.3.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^6.4.2",
+    "@types/node": "^22.0.0",
+    "eslint": "^9.39.1",
+    "tsup": "^8.0.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.0.0",
+    "vitest": "^4.0.15"
+  },
+  "keywords": [
+    "vite-plugin",
+    "font",
+    "subset",
+    "woff2",
+    "chinese"
+  ],
+  "author": "jobinjia",
+  "license": "MIT",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}

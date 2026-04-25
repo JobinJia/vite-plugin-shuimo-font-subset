@@ -29,7 +29,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "pnpm build",
+    "release": "bumpp && pnpm publish"
   },
   "peerDependencies": {
     "vite": "^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0"
@@ -41,6 +43,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^6.4.2",
     "@types/node": "^22.0.0",
+    "bumpp": "^11.0.1",
     "eslint": "^9.39.1",
     "eslint-plugin-format": "^2.0.1",
     "tsup": "^8.0.0",

@@ -1,7 +1,7 @@
 {
   "name": "@jobinjia/vite-plugin-shuimo-font-subset",
   "type": "module",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Content-aware font subset Vite plugin — scans source files for unique characters and replaces font assets with subsetted WOFF2 at build time.",
   "author": "jobinjia",
   "license": "MIT",

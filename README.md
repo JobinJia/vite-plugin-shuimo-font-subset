@@ -12,14 +12,15 @@ pnpm add -D @jobinjia/vite-plugin-shuimo-font-subset
 npm i -D @jobinjia/vite-plugin-shuimo-font-subset
 ```
 
-Peer dependency: `vite ^5 || ^6 || ^7`.
+Peer dependency: `vite ^5 || ^6 || ^7 || ^8`.
 
 ## Usage
 
+`vite.config.ts`:
+
 ```ts
-// vite.config.ts
-import { defineConfig } from 'vite'
 import shuimoFontSubset from '@jobinjia/vite-plugin-shuimo-font-subset'
+import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [
@@ -36,13 +37,13 @@ The plugin only runs at build (`apply: 'build'`) — `vite dev` is untouched.
 
 ## Options
 
-| Option        | Type                                  | Default       | Description                                                                                                          |
-| ------------- | ------------------------------------- | ------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `targetFonts` | `string[]`                            | **required**  | Source font basenames (or absolute / root-relative paths) to replace. Matched against the asset's original filename. |
-| `scanFiles`   | `string[]`                            | **required**  | Globs of files to scan for unique characters.                                                                        |
-| `scanCwd`     | `string`                              | Vite `root`   | Working directory for `scanFiles` glob resolution.                                                                   |
-| `format`      | `'woff2' \| 'woff' \| 'truetype'`     | `'woff2'`     | Output font format for the replaced asset.                                                                           |
-| `extraChars`  | `string`                              | —             | Extra characters to always include (useful for runtime-injected strings outside scanned files).                      |
+| Option        | Type                              | Default      | Description                                                                                                          |
+| ------------- | --------------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------- |
+| `targetFonts` | `string[]`                        | **required** | Source font basenames (or absolute / root-relative paths) to replace. Matched against the asset's original filename. |
+| `scanFiles`   | `string[]`                        | **required** | Globs of files to scan for unique characters.                                                                        |
+| `scanCwd`     | `string`                          | Vite `root`  | Working directory for `scanFiles` glob resolution.                                                                   |
+| `format`      | `'woff2' \| 'woff' \| 'truetype'` | `'woff2'`    | Output font format for the replaced asset.                                                                           |
+| `extraChars`  | `string`                          | —            | Extra characters to always include (useful for runtime-injected strings outside scanned files).                      |
 
 ## How it works
 

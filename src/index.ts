@@ -38,9 +38,14 @@ export default function shuimoFontSubset(options: PluginOptions): Plugin {
       )
       const targetBasenames = new Set(targets.map(t => path.basename(t)))
       const format = options.format ?? 'woff2'
-      const ext = format === 'truetype' ? '.ttf' : `.${format}`
 
-      for (const [key, asset] of Object.entries(bundle)) {
+      // Mutate matching assets in place. Both Rollup and Rolldown accept
+      // property assignment on the asset object (`asset.source = ...`); they
+      // only forbid re-keying the bundle map (`bundle[newKey] = ...`).
+      // Callers are responsible for ensuring the source font's filename in
+      // their import already matches the desired output format — this plugin
+      // only swaps bytes, not extensions.
+      for (const asset of Object.values(bundle)) {
         if (asset.type !== 'asset')
           continue
         const candidateName = asset.name ?? path.basename(asset.fileName)
@@ -57,13 +62,7 @@ export default function shuimoFontSubset(options: PluginOptions): Plugin {
           format,
         })
 
-        const newFileName = asset.fileName.replace(/\.(ttf|otf|woff2?|TTF|OTF|WOFF2?)$/, ext)
-        delete bundle[key]
-        bundle[newFileName] = {
-          ...asset,
-          fileName: newFileName,
-          source: subset,
-        }
+        asset.source = subset
       }
     },
   }

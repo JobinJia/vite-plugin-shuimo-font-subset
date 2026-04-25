@@ -19,7 +19,7 @@ describe('shuimoFontSubset plugin', () => {
     expect(plugin.apply).toBe('build')
   })
 
-  it('replaces a matching font asset in generateBundle with subset woff2', async () => {
+  it('replaces a matching font asset source with subset woff2 (in place)', async () => {
     const plugin = shuimoFontSubset({
       targetFonts: [FIXTURE_TTF],
       scanFiles: ['**/*.{md,vue}'],
@@ -27,7 +27,6 @@ describe('shuimoFontSubset plugin', () => {
       format: 'woff2',
     })
 
-    // Mimic Vite plugin lifecycle.
     const ctx = {} as any
     await callHook(plugin.configResolved, ctx, { root: FIXTURE_DIR })
     await callHook(plugin.buildStart, ctx, {})
@@ -44,10 +43,10 @@ describe('shuimoFontSubset plugin', () => {
 
     await callHook(plugin.generateBundle, ctx, {}, bundle, false)
 
-    const remaining = Object.values(bundle)
-    expect(remaining).toHaveLength(1)
-    const replaced = remaining[0] as any
-    expect(replaced.fileName.endsWith('.woff2')).toBe(true)
+    // Asset key/fileName are unchanged (rolldown forbids bundle re-keying).
+    expect(Object.keys(bundle)).toEqual(['assets/sample-abc123.ttf'])
+    const replaced = bundle['assets/sample-abc123.ttf']
+    expect(replaced.fileName).toBe('assets/sample-abc123.ttf')
     expect(replaced.source.length).toBeLessThan(original.length)
     // woff2 magic
     expect(replaced.source[0]).toBe(0x77)

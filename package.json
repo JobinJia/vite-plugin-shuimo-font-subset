@@ -34,7 +34,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "pnpm build",
-    "release": "bumpp && pnpm publish"
+    "release": "bumpp && pnpm publish --tag $(node -p \"(require('./package.json').version.split('-')[1]||'latest').split('.')[0]\")"
   },
   "peerDependencies": {
     "vite": "^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0"

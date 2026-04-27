@@ -1,16 +1,16 @@
 import { readFile } from 'node:fs/promises'
 import { globby } from 'globby'
 
-export interface ScanContentOptions {
+export interface ScanSource {
   cwd: string
   patterns: string[]
 }
 
-export async function scanContent(options: ScanContentOptions): Promise<Set<string>> {
-  const files = await globby(options.patterns, {
-    cwd: options.cwd,
-    absolute: true,
-  })
+export async function scanContent(sources: ScanSource[]): Promise<Set<string>> {
+  const fileLists = await Promise.all(
+    sources.map(src => globby(src.patterns, { cwd: src.cwd, absolute: true })),
+  )
+  const files = Array.from(new Set(fileLists.flat()))
 
   const chars = new Set<string>()
   await Promise.all(files.map(async (file) => {

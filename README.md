@@ -35,15 +35,51 @@ export default defineConfig({
 
 The plugin only runs at build (`apply: 'build'`) — `vite dev` is untouched.
 
+### Multiple scan roots
+
+`scanFiles` also accepts an array of `{ cwd, patterns }` sources, each scanned independently and merged. Use this when characters live outside the Vite project root — for example a theme package whose components hard-code glyphs the consuming site never types itself:
+
+```ts
+import path from 'node:path'
+import shuimoFontSubset from '@jobinjia/vite-plugin-shuimo-font-subset'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [
+    shuimoFontSubset({
+      targetFonts: ['yishanbeizhuanti.woff2'],
+      scanFiles: [
+        // user site content
+        { cwd: process.cwd(), patterns: ['pages/**/*.md', 'src/**/*.{vue,ts}'] },
+        // theme components — chars hard-coded in the dependency
+        {
+          cwd: path.dirname(require.resolve('valaxy-theme-shuimo/package.json')),
+          patterns: ['components/**/*.vue'],
+        },
+      ],
+    }),
+  ],
+})
+```
+
+Per-source `cwd` is optional. When omitted, it falls back to the top-level `scanCwd` (or Vite's `config.root`).
+
 ## Options
 
-| Option        | Type                              | Default      | Description                                                                                                          |
-| ------------- | --------------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------------- |
-| `targetFonts` | `string[]`                        | **required** | Source font basenames (or absolute / root-relative paths) to replace. Matched against the asset's original filename. |
-| `scanFiles`   | `string[]`                        | **required** | Globs of files to scan for unique characters.                                                                        |
-| `scanCwd`     | `string`                          | Vite `root`  | Working directory for `scanFiles` glob resolution.                                                                   |
-| `format`      | `'woff2' \| 'woff' \| 'truetype'` | `'woff2'`    | Output font format for the replaced asset.                                                                           |
-| `extraChars`  | `string`                          | —            | Extra characters to always include (useful for runtime-injected strings outside scanned files).                      |
+| Option        | Type                              | Default      | Description                                                                                                                                                                 |
+| ------------- | --------------------------------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `targetFonts` | `string[]`                        | **required** | Source font basenames (or absolute / root-relative paths) to replace. Matched against the asset's original filename.                                                        |
+| `scanFiles`   | `string[]` \| `ScanSource[]`      | **required** | Globs of files to scan for unique characters. `string[]` = single source resolved against `scanCwd`; `{ cwd?, patterns }[]` = multiple independent sources, results merged. |
+| `scanCwd`     | `string`                          | Vite `root`  | Working directory for `string[]` `scanFiles`, and the fallback `cwd` for `ScanSource` entries that omit it.                                                                 |
+| `format`      | `'woff2' \| 'woff' \| 'truetype'` | `'woff2'`    | Output font format for the replaced asset.                                                                                                                                  |
+| `extraChars`  | `string`                          | —            | Extra characters to always include (useful for runtime-injected strings outside scanned files).                                                                             |
+
+```ts
+interface ScanSource {
+  cwd?: string
+  patterns: string[]
+}
+```
 
 ## How it works
 

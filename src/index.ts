@@ -1,12 +1,12 @@
 import type { Plugin } from 'vite'
-import type { PluginOptions } from './types'
+import type { PluginOptions, ScanSource } from './types'
 import { Buffer } from 'node:buffer'
 import path from 'node:path'
 import process from 'node:process'
 import { scanContent } from './scanContent'
 import { subsetFont } from './subsetFont'
 
-export type { PluginOptions }
+export type { PluginOptions, ScanSource }
 
 export default function shuimoFontSubset(options: PluginOptions): Plugin {
   let targetChars = new Set<string>()
@@ -21,11 +21,16 @@ export default function shuimoFontSubset(options: PluginOptions): Plugin {
     },
 
     async buildStart() {
-      const cwd = options.scanCwd ?? resolvedRoot
-      targetChars = await scanContent({
-        cwd,
-        patterns: options.scanFiles,
-      })
+      const fallbackCwd = options.scanCwd ?? resolvedRoot
+      const sources: { cwd: string, patterns: string[] }[]
+        = isStringArray(options.scanFiles)
+          ? [{ cwd: fallbackCwd, patterns: options.scanFiles }]
+          : options.scanFiles.map(src => ({
+              cwd: src.cwd ?? fallbackCwd,
+              patterns: src.patterns,
+            }))
+
+      targetChars = await scanContent(sources)
       if (options.extraChars) {
         for (const c of options.extraChars)
           targetChars.add(c)
@@ -66,4 +71,8 @@ export default function shuimoFontSubset(options: PluginOptions): Plugin {
       }
     },
   }
+}
+
+function isStringArray(value: string[] | ScanSource[]): value is string[] {
+  return value.length === 0 || typeof value[0] === 'string'
 }

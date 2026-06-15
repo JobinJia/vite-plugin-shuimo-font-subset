@@ -2,6 +2,9 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "ESNext",
+    // TS6 deprecates `baseUrl` (TS5101); tsup's DTS build injects it internally.
+    // Silence until tsup stops injecting it / TS7 removes the option. See egoist/tsup#1388.
+    "ignoreDeprecations": "6.0",
     "moduleResolution": "bundler",
     "types": ["node", "vitest/globals"],
     "strict": true,

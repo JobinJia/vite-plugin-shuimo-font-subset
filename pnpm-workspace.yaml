@@ -1,0 +1,7 @@
+allowBuilds:
+  esbuild: true
+minimumReleaseAgeExclude:
+  - '@antfu/eslint-config@9.2.0'
+shellEmulator: true
+
+trustPolicy: no-downgrade

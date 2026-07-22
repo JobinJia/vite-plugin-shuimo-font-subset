@@ -27,7 +27,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && tsc -p tsconfig.build.json",
     "dev": "tsup --watch",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -40,23 +40,19 @@
     "vite": "^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0"
   },
   "dependencies": {
-    "globby": "^16.2.0",
+    "globby": "^16.2.2",
     "subset-font": "^2.5.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^9.0.0",
-    "@types/node": "^26.0.0",
-    "bumpp": "^11.1.0",
-    "eslint": "^10.5.0",
+    "@antfu/eslint-config": "^9.2.0",
+    "@types/node": "^26.1.1",
+    "@typescript/native": "npm:typescript@^7.0.2",
+    "bumpp": "^12.0.0",
+    "eslint": "^10.7.0",
     "eslint-plugin-format": "^2.0.1",
     "tsup": "^8.5.1",
-    "typescript": "^6.0.3",
-    "vite": "^8.0.16",
-    "vitest": "^4.1.9"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
+    "vite": "^8.1.5",
+    "vitest": "^4.1.10"
   }
 }
